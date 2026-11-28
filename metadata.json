@@ -1,0 +1,6 @@
+{
+  "name": "PHERI NEPAL — Trusted Tourism Ecosystem",
+  "description": "Discover Nepal. Travel with Confidence. Return Again. Nepal's unified digital tourism ecosystem across all 7 provinces and 77 districts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

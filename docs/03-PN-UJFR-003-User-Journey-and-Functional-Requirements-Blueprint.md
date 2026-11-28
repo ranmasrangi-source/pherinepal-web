@@ -1,0 +1,1035 @@
+# PHERI NEPAL
+## DOCUMENT 03 — USER JOURNEY AND FUNCTIONAL REQUIREMENTS BLUEPRINT
+
+- **Document Code:** PN-UJFR-003
+- **Version:** 1.0
+- **Document Series:** 03 of 12
+- **Document Status:** Official Functional Blueprint
+- **Parent Documents:**
+  - Document 01 — Master Project Blueprint (PN-MPB-001)
+  - Document 02 — Business Model and Revenue Blueprint (PN-BMR-002)
+- **Project:** PHERI NEPAL
+- **Platform:** Website — Initial Release
+- **Product Positioning:** Nepal's Trusted Tourism Ecosystem
+- **Tagline:** Discover Nepal. Travel with Confidence. Return Again.
+
+---
+
+## 1. DOCUMENT PURPOSE
+This document defines how users interact with the PHERI NEPAL platform and specifies the functional behaviour expected from its website.
+
+It converts the strategic direction established in Document 01 and the commercial framework established in Document 02 into practical user journeys, system workflows, functional requirements, and acceptance conditions.
+
+This document defines:
+- User types and their responsibilities.
+- Traveler journeys before, during, and after travel.
+- Tourism business and partner workflows.
+- Booking inquiry and partner response processes.
+- Account registration and profile management.
+- Destination discovery and tourism information access.
+- AI-assisted travel services.
+- Multilingual user experience.
+- Reviews, notifications, and support.
+- Administrative workflows.
+- Functional requirements and acceptance criteria.
+
+This document does not independently redefine the business model, technical architecture, database structure, API specifications, security architecture, or commercial rates. Those subjects are governed by their respective documents in the official document series.
+
+---
+
+## 2. DOCUMENT GOVERNANCE AND ALIGNMENT
+### 2.1 Official Document Dependencies
+| Document | Governing Responsibility |
+| :--- | :--- |
+| Document 01 | Project identity, scope, modules, objectives, policies |
+| Document 02 | Business model, revenue streams, commercial rules |
+| Document 03 | User journeys and functional requirements |
+| Document 04 | UI/UX and design system |
+| Document 05 | Technical architecture |
+| Document 06 | Database and data management |
+| Document 07 | API and third-party integrations |
+| Document 08 | AI and intelligent services |
+| Document 09 | Security, privacy and legal compliance |
+| Document 10 | Administration, partner and operations |
+| Document 11 | Marketing, SEO and growth |
+| Document 12 | Testing, deployment and maintenance |
+
+### 2.2 Functional Governance Rules
+1. Document 01 remains the master authority for project scope and platform modules.
+2. Document 02 remains the authority for revenue definitions and commercial rules.
+3. Document 03 defines how users and system functions operate within those approved boundaries.
+4. Functional requirements must not introduce an unapproved commercial model.
+5. A feature that depends on an external integration must not be represented as operational until that integration is implemented and tested.
+6. Any unresolved requirement must be recorded as a Pending Decision rather than treated as an approved feature.
+
+---
+
+## 3. USER TYPES AND ACCESS CATEGORIES
+PHERI NEPAL will support the following user categories.
+
+### 3.1 Public Visitor
+A person accessing the website without registering or signing in.
+**Permitted activities:**
+- Browse destinations and tourism information.
+- Search accommodation, transportation, tours and activities.
+- View public business listings.
+- Explore travel guidance.
+- Use publicly available AI features, subject to service limits.
+- Change the website language.
+- View public reviews and ratings.
+- Contact PHERI NEPAL through available public contact channels.
+
+### 3.2 Registered Traveler
+A visitor who creates an account.
+**Permitted activities:**
+- Manage a personal profile.
+- Save destinations and travel interests.
+- Submit booking inquiries.
+- Track inquiry and booking-related statuses.
+- Receive relevant notifications.
+- Manage travel preferences.
+- Submit eligible reviews.
+- Access account-related support.
+
+### 3.3 Tourism Business / Partner
+An approved tourism business or service provider using the partner area.
+**Partner categories may include:**
+- Hotels and accommodation providers.
+- Tour operators.
+- Trekking and activity operators.
+- Transportation providers.
+- Travel service providers.
+- Other eligible tourism businesses.
+
+**Permitted activities:**
+- Submit business registration information.
+- Manage business profile information.
+- Submit verification documents.
+- Manage eligible service listings.
+- Receive and respond to booking inquiries.
+- Update inquiry-related statuses.
+- Manage available business information.
+- View relevant business activity reports.
+- Manage applicable commercial subscriptions and promotional services.
+
+Partner permissions must depend on approval status and assigned access rights.
+
+### 3.4 Administrator
+An authorized PHERI NEPAL team member responsible for platform management.
+**Permitted activities:**
+- Manage users and partner accounts.
+- Review partner verification submissions.
+- Manage tourism content and listings.
+- Monitor booking inquiries.
+- Manage reviews and reports.
+- Manage platform notifications.
+- Review system activity and reports.
+- Manage permitted commercial configurations.
+- Handle complaints and support cases.
+- Control content publication and moderation.
+
+Administrative access must follow role-based authorization.
+
+### 3.5 Internal Operational Roles
+The administration system may support separate internal responsibilities:
+- Super Administrator.
+- Content Administrator.
+- Partner Verification Officer.
+- Booking Operations Officer.
+- Customer Support Officer.
+- Finance and Reporting Officer.
+- Marketing and SEO Administrator.
+
+The exact permission matrix is governed by Document 10.
+
+---
+
+## 4. THE THREE-STAGE TRAVELER JOURNEY
+The entire traveler experience is organized into three connected stages:
+1. Before Travel.
+2. During Travel.
+3. After Travel.
+
+The platform should maintain continuity between these stages so travelers do not need to restart their entire planning process when their travel stage changes.
+
+### 4.1 Before Travel
+**Objective:** Help travelers discover Nepal, understand travel options, plan their journey, and contact suitable tourism service providers.
+
+**Traveler Journey:**
+| Step | Traveler Action | Expected System Response |
+| :--- | :--- | :--- |
+| 1 | Opens PHERI NEPAL | Displays the website homepage |
+| 2 | Selects preferred language | Loads available content in that language |
+| 3 | Explores Nepal | Displays destination and tourism information |
+| 4 | Searches destinations | Returns relevant destination results |
+| 5 | Explores services | Displays relevant accommodation, transport, tours and activities |
+| 6 | Uses AI travel assistance | Provides supported travel guidance |
+| 7 | Creates or signs into an account | Opens the appropriate account workflow |
+| 8 | Saves travel interests | Stores eligible preferences in the account |
+| 9 | Submits a booking inquiry | Creates an inquiry record |
+| 10 | Receives partner response | Displays the response and current inquiry status |
+| 11 | Reviews the proposed arrangement | Allows the traveler to respond or request clarification |
+
+**Required Features:**
+- Destination discovery.
+- Search and filtering.
+- Destination information pages.
+- Accommodation directory.
+- Transportation directory.
+- Tours and activities directory.
+- Tourism business directory.
+- AI-assisted travel planning.
+- Multilingual information.
+- Travel preference management.
+- Booking inquiry submission.
+- Inquiry status tracking.
+- Partner response communication.
+- Relevant notifications.
+
+### 4.2 During Travel
+**Objective:** Help travelers access useful information and tourism services while they are in Nepal.
+
+**Traveler Journey:**
+| Step | Traveler Action | Expected System Response |
+| :--- | :--- | :--- |
+| 1 | Opens PHERI NEPAL during travel | Displays accessible travel information |
+| 2 | Searches nearby or selected destinations | Displays relevant location-based results where supported |
+| 3 | Checks destination information | Displays available destination guidance |
+| 4 | Searches transportation | Displays relevant transport listings |
+| 5 | Explores activities and services | Displays available service information |
+| 6 | Uses AI travel assistance | Provides supported travel guidance |
+| 7 | Contacts a tourism business | Provides the available contact or inquiry method |
+| 8 | Checks saved travel information | Displays saved destinations and relevant account information |
+| 9 | Requests assistance | Opens an available support channel |
+
+**Required Features:**
+- Mobile-responsive website experience.
+- Destination and location information.
+- Map and location services.
+- Transportation information.
+- Tourism service directory.
+- AI travel assistance.
+- Emergency and important travel information.
+- Business contact information.
+- Booking inquiry access.
+- Account and saved information access.
+- Relevant notifications.
+
+Emergency information must be clearly distinguished from general tourism recommendations. The platform must not imply that AI guidance replaces official emergency services.
+
+### 4.3 After Travel
+**Objective:** Maintain the traveler relationship after the trip and encourage feedback, recommendations, and future engagement.
+
+**Traveler Journey:**
+| Step | Traveler Action | Expected System Response |
+| :--- | :--- | :--- |
+| 1 | Returns to PHERI NEPAL | Displays the normal website experience |
+| 2 | Signs into the account | Loads the traveler profile |
+| 3 | Views previous travel-related activity | Displays available historical account information |
+| 4 | Submits an eligible review | Records the review for applicable moderation |
+| 5 | Shares travel feedback | Stores feedback through the relevant process |
+| 6 | Explores future destinations | Displays relevant destination information |
+| 7 | Receives permitted updates | Displays relevant notifications and communications |
+
+**Required Features:**
+- Review and rating submission.
+- Feedback collection.
+- Historical inquiry information.
+- Saved destinations.
+- Future travel discovery.
+- Traveler account management.
+- Relevant communication and notifications.
+- Review moderation and reporting.
+
+---
+
+## 5. DESTINATION DISCOVERY WORKFLOW
+Destination discovery is a central platform function.
+
+### 5.1 Geographic Coverage
+The destination information structure must support:
+- All 7 provinces of Nepal.
+- All 77 districts of Nepal.
+- Relevant municipalities and local areas.
+- Individual tourism destinations.
+- Natural attractions.
+- Cultural and historical attractions.
+- Religious and heritage locations.
+- Adventure and activity destinations.
+- Other approved tourism locations.
+
+### 5.2 Destination Search
+Users should be able to search by:
+- Destination name.
+- Province.
+- District.
+- Destination category.
+- Travel interest.
+- Available location filters.
+
+Search results should display available destination information in a clear and understandable format.
+
+### 5.3 Destination Detail Page
+A destination detail page should support the following information where verified and available:
+1. Destination name.
+2. Main image or image gallery.
+3. Overview and description.
+4. Geographic location.
+5. Province and district.
+6. Attractions and highlights.
+7. Activities.
+8. Best available travel information.
+9. Accessibility and transportation information.
+10. Nearby accommodation listings.
+11. Nearby tourism services.
+12. Map location.
+13. Relevant travel guidance.
+14. Important safety information.
+15. Related destinations.
+16. Updated information date where applicable.
+
+Unavailable or unverified information must not be presented as confirmed fact.
+
+---
+
+## 6. TOURISM SERVICE DISCOVERY
+The platform must provide structured discovery for the tourism services defined in Document 01.
+
+### 6.1 Accommodation Directory — M03
+Users should be able to:
+- Browse accommodation listings.
+- Search by destination or location.
+- Filter by available categories.
+- View business information.
+- View available photographs.
+- Review available facilities.
+- View contact information.
+- Submit an accommodation inquiry where supported.
+
+### 6.2 Transportation Directory — M04
+Users should be able to:
+- Browse available transportation services.
+- Search by location or route where information exists.
+- View service-provider information.
+- Review available transport categories.
+- Access contact information.
+- Submit a transportation inquiry where supported.
+
+### 6.3 Tours and Activities — M05
+Users should be able to:
+- Browse tours and activities.
+- Search by destination.
+- Explore activity categories.
+- View descriptions and available details.
+- Review service-provider information.
+- Submit an inquiry for relevant services.
+
+### 6.4 Business Directory — M06
+Users should be able to:
+- Discover tourism-related businesses.
+- Search by name or location.
+- Filter by business category.
+- View approved business profiles.
+- Access available contact details.
+- Identify applicable verification information.
+
+Commercial promotion must not be confused with verification or organic search ranking.
+
+---
+
+## 7. USER REGISTRATION AND ACCOUNT WORKFLOW
+### 7.1 Registration
+The system should provide a registration process for travelers.
+**Required functional capabilities:**
+- Registration form.
+- Required-field validation.
+- Email or other approved account verification.
+- Account creation confirmation.
+- Sign-in access.
+- Password recovery where applicable.
+- Clear error messages.
+- Acceptance of applicable terms and privacy notices.
+
+The specific authentication methods and verification mechanisms are governed by Document 05 and Document 09.
+
+### 7.2 Traveler Profile
+Registered travelers should be able to manage:
+- Display name.
+- Contact information.
+- Preferred language.
+- Travel interests.
+- Saved destinations.
+- Relevant notification preferences.
+- Account settings.
+
+Only necessary information should be collected.
+
+### 7.3 Account Management
+The system should support:
+- Sign-in.
+- Sign-out.
+- Account recovery.
+- Profile updates.
+- Session-related account access controls.
+- Account closure requests through the approved process.
+
+---
+
+## 8. BOOKING INQUIRY AND PARTNER CONFIRMATION WORKFLOW
+This section implements the booking policy established in Document 01 and the commercial rules established in Document 02.
+
+**Initial operational model:** Inquiry submission followed by partner response and confirmation.
+The platform must not represent an inquiry as a confirmed booking.
+
+### 8.1 Traveler Inquiry Workflow
+| Step | Action | System Behaviour |
+| :--- | :--- | :--- |
+| 1 | Selects a tourism service | Displays relevant service information |
+| 2 | Selects inquiry option | Opens the inquiry form |
+| 3 | Enters required details | Validates the submitted information |
+| 4 | Submits inquiry | Creates an inquiry record |
+| 5 | Receives acknowledgement | Displays inquiry reference and status |
+| 6 | Partner receives inquiry | Makes the inquiry available in the partner area |
+| 7 | Partner reviews inquiry | Allows an appropriate response |
+| 8 | Traveler receives response | Displays partner response |
+| 9 | Traveler reviews arrangement | Allows acceptance, clarification or withdrawal where supported |
+
+### 8.2 Inquiry Information
+Depending on the service category, the inquiry form may collect:
+- Traveler contact details.
+- Selected service.
+- Requested date or period.
+- Number of travelers.
+- Relevant preferences.
+- Special requirements.
+- Additional message.
+
+The system should collect only information necessary for the requested service.
+
+### 8.3 Inquiry Status Management
+The following functional statuses are proposed for the inquiry workflow:
+
+| Status | Meaning |
+| :--- | :--- |
+| Submitted | Inquiry has been successfully received |
+| Under Review | Partner or authorized operator is reviewing it |
+| Responded | A partner response has been submitted |
+| Awaiting Traveler | Traveler action or clarification is required |
+| Confirmed | The arrangement has been confirmed through the approved process |
+| Declined | The partner has declined the inquiry |
+| Cancelled | The inquiry or arrangement has been cancelled |
+| Completed | The relevant service has been completed |
+| Closed | The inquiry has been administratively closed |
+
+These statuses describe the inquiry workflow. They do not replace the separate payment status or financial recordkeeping requirements established in Document 02.
+
+### 8.4 Partner Response Workflow
+The partner should be able to:
+1. Sign into the approved partner account.
+2. View received inquiries.
+3. Open inquiry details.
+4. Review requested dates and requirements.
+5. Respond with availability or an alternative.
+6. Request clarification.
+7. Accept or decline an inquiry.
+8. Update the applicable status.
+9. Communicate relevant information to the traveler.
+10. View the inquiry history.
+
+### 8.5 Booking and Payment Limitations
+For the initial release:
+- Inquiry submission is not a confirmed booking.
+- Partner confirmation must follow the approved process.
+- The platform must not claim automated booking capability unless implemented and tested.
+- The platform must not claim live payment processing unless the required payment integration is operational.
+- Booking status and payment status must remain separate.
+- Commission eligibility must follow Document 02.
+- An inquiry alone does not create earned booking commission.
+
+---
+
+## 9. AI-ASSISTED USER EXPERIENCE
+AI is a major ecosystem capability of PHERI NEPAL.
+This document defines user-facing AI workflows. Detailed AI architecture, model selection, data handling, evaluation and service specifications are governed by Document 08.
+
+### 9.1 AI Travel Assistant
+Users should be able to ask travel-related questions about Nepal.
+**Supported use cases may include:**
+- Destination discovery.
+- Travel planning guidance.
+- Tourism information.
+- Activity suggestions.
+- Cultural information.
+- General transportation guidance.
+- Accommodation discovery.
+- Travel preparation.
+- Multilingual assistance.
+- Questions about available platform services.
+
+### 9.2 AI Travel Planning Workflow
+| Step | User Action | AI/System Response |
+| :--- | :--- | :--- |
+| 1 | Opens AI travel assistant | Displays the assistant interface |
+| 2 | Describes travel interests | Interprets the request |
+| 3 | Provides travel preferences | Uses relevant available context |
+| 4 | Requests recommendations | Generates supported suggestions |
+| 5 | Requests further information | Provides additional guidance |
+| 6 | Selects a suggested destination | Opens the relevant destination information |
+| 7 | Requests a service | Directs the user to the relevant listing or inquiry workflow |
+
+### 9.3 AI Reliability Requirements
+- AI must not invent destination facts, prices, availability or business verification.
+- Uncertain information must be communicated as uncertain.
+- Important travel and safety information should prioritize reliable sources.
+- AI must distinguish recommendations from confirmed bookings.
+- AI must not claim to have completed an external transaction when it has not.
+- AI responses must follow the platform's language and privacy policies.
+- Users must have a way to access relevant non-AI information where available.
+
+### 9.4 AI Service Boundaries
+The specific AI features, integrations, model permissions, usage limits and premium AI services will be defined in Document 08.
+Any premium AI functionality must follow the commercial framework in Document 02, including Revenue ID R11 where applicable.
+
+---
+
+## 10. MULTILINGUAL USER WORKFLOW
+The platform is designed to support 12 languages.
+
+### 10.1 Language Selection
+Users should be able to:
+- Select a preferred language.
+- Change language while browsing.
+- Receive available interface content in the selected language.
+- Access language-consistent navigation.
+- Use supported multilingual AI services.
+
+### 10.2 Language Governance
+- Nepali and English are foundational languages.
+- The remaining language selections must be supported by verified tourist-arrival and source-market language data.
+- The final 12-language list remains subject to approval.
+- Missing translations must not be silently replaced with misleading or inaccurate content.
+- Important travel information should receive appropriate translation review.
+
+The final language list and translation governance must remain consistent with Document 01.
+
+---
+
+## 11. MAP AND LOCATION WORKFLOW
+The platform should provide location-related functionality through M10.
+Users should be able to:
+- View destination locations.
+- Explore available map information.
+- Identify relevant tourism businesses.
+- Access location details.
+- View supported directions or route information.
+- Explore nearby services where supported.
+
+Location-dependent results must be based on available and permitted location information.
+The platform must not claim live location tracking unless that feature has been separately approved, implemented and disclosed.
+
+---
+
+## 12. REVIEWS AND REPUTATION WORKFLOW
+The platform should support a transparent review system through M13.
+
+### 12.1 Traveler Review Process
+1. Traveler opens an eligible service or business page.
+2. Traveler selects the review option.
+3. System checks applicable submission conditions.
+4. Traveler submits a rating and written feedback.
+5. System records the submission.
+6. Review enters the applicable moderation process.
+7. Approved review becomes publicly visible.
+8. Reported reviews may be reviewed by authorized staff.
+
+### 12.2 Review Requirements
+- Reviews must follow the platform's published guidelines.
+- The platform should provide a reporting mechanism.
+- Moderation decisions must follow documented procedures.
+- Businesses must not be allowed to purchase positive reviews.
+- Paid promotion must not influence the authenticity of customer feedback.
+- Review eligibility and verification rules must be finalized under the relevant operational and compliance documents.
+
+---
+
+## 13. NOTIFICATION WORKFLOW
+M14 will support relevant platform notifications.
+
+### 13.1 Traveler Notifications
+Potential notification events include:
+- Account registration confirmation.
+- Account-related security notices.
+- Booking inquiry acknowledgement.
+- Partner response.
+- Inquiry status change.
+- Relevant support updates.
+- Approved travel-related updates.
+
+### 13.2 Partner Notifications
+Potential notification events include:
+- New booking inquiry.
+- Inquiry clarification request.
+- Traveler response.
+- Inquiry status change.
+- Verification status update.
+- Business profile review.
+- Relevant account or subscription notices.
+
+### 13.3 Notification Requirements
+- Notifications must relate to an identifiable event.
+- The system should avoid duplicate notifications for the same event.
+- Users should receive notifications through enabled channels.
+- Communication preferences must follow applicable privacy and consent requirements.
+- Delivery failure must not falsely indicate successful delivery.
+
+The supported channels and integration details are governed by Documents 05 and 07.
+
+---
+
+## 14. PARTNER ONBOARDING AND BUSINESS MANAGEMENT
+This section defines partner-facing functional workflows. Detailed operational policies and verification procedures are governed by Document 10.
+
+### 14.1 Partner Registration
+The partner should be able to:
+1. Open the partner registration area.
+2. Enter business information.
+3. Select the relevant business category.
+4. Provide required contact details.
+5. Submit applicable supporting documents.
+6. Review submitted information.
+7. Submit the application.
+8. Receive the application status.
+
+### 14.2 Partner Verification
+The system should support:
+- Verification application submission.
+- Document review.
+- Verification status display.
+- Requests for additional information.
+- Approval or rejection recording.
+- Administrative review history.
+
+Subscription or promotional payment must not automatically grant verified status.
+
+### 14.3 Business Profile Management
+Approved partners should be able to manage permitted information, including:
+- Business name.
+- Business description.
+- Category.
+- Location.
+- Contact information.
+- Images.
+- Services.
+- Available facilities or features.
+- Relevant service information.
+
+Changes that require administrative review must not become publicly visible before approval.
+
+### 14.4 Partner Dashboard
+The partner dashboard should provide access to:
+- Business profile.
+- Verification status.
+- Service listings.
+- Booking inquiries.
+- Inquiry responses.
+- Relevant notifications.
+- Applicable subscription information.
+- Relevant performance information.
+
+The dashboard must display only the information permitted for the partner's role.
+
+---
+
+## 15. ADMINISTRATION WORKFLOWS
+M16, M17 and M18 support the administration and management functions established in Document 01.
+
+### 15.1 User Management
+Authorized administrators should be able to:
+- View user records.
+- Review relevant account information.
+- Manage permitted account statuses.
+- Handle reported account issues.
+- Review relevant account activity.
+
+### 15.2 Partner Management
+Authorized administrators should be able to:
+- Review partner applications.
+- Review submitted documents.
+- Request additional information.
+- Approve or reject verification applications.
+- Manage partner account status.
+- Review business listing changes.
+- Record administrative decisions.
+
+### 15.3 Content Management
+Authorized content administrators should be able to:
+- Create destination content.
+- Edit tourism information.
+- Manage images and media.
+- Review submitted content.
+- Publish approved content.
+- Unpublish outdated or inaccurate content.
+- Manage translations.
+- Review content update history.
+
+### 15.4 Booking Inquiry Monitoring
+Authorized operators should be able to:
+- View inquiries within their permissions.
+- Identify delayed responses.
+- Review inquiry status.
+- Handle support escalations.
+- Record administrative interventions.
+- Review relevant inquiry history.
+
+Administrative intervention must not silently overwrite the original transaction history.
+
+### 15.5 Review Moderation
+Authorized administrators should be able to:
+- View reported reviews.
+- Review submitted evidence.
+- Apply documented moderation decisions.
+- Record the reason for action.
+- Retain relevant moderation history.
+
+### 15.6 Analytics and Reporting
+M17 should support reporting on relevant platform activity, including:
+- Website usage.
+- Destination engagement.
+- Search activity.
+- User registrations.
+- Partner registrations.
+- Booking inquiries.
+- Inquiry response activity.
+- Review submissions.
+- Content performance.
+- Relevant commercial activity.
+
+Financial reporting must use the definitions and controls established in Document 02.
+
+---
+
+## 16. FUNCTIONAL REQUIREMENT REGISTER
+The following register establishes the functional requirements for the initial website and its approved future capabilities.
+
+**Priority definitions:**
+- **P0 — Essential:** Required for the initial usable platform.
+- **P1 — Important:** Required for a complete initial ecosystem or an approved subsequent release.
+- **P2 — Planned:** May be introduced after the core platform is stable.
+
+A priority does not mean a feature is already implemented.
+
+| Requirement ID | Functional Requirement | Priority |
+| :--- | :--- | :--- |
+| FR-001 | Public homepage and navigation | P0 |
+| FR-002 | Destination directory | P0 |
+| FR-003 | Destination detail pages | P0 |
+| FR-004 | Search and filtering | P0 |
+| FR-005 | Tourism business directory | P0 |
+| FR-006 | Accommodation listings | P0 |
+| FR-007 | Transportation listings | P0 |
+| FR-008 | Tours and activities listings | P0 |
+| FR-009 | Traveler registration and sign-in | P0 |
+| FR-010 | Traveler profile management | P0 |
+| FR-011 | Booking inquiry submission | P0 |
+| FR-012 | Partner inquiry dashboard | P0 |
+| FR-013 | Partner response and inquiry status management | P0 |
+| FR-014 | Administrative user management | P0 |
+| FR-015 | Partner application management | P0 |
+| FR-016 | Partner verification workflow | P0 |
+| FR-017 | Content management | P0 |
+| FR-018 | Multilingual interface foundation | P0 |
+| FR-019 | Responsive mobile website | P0 |
+| FR-020 | Basic notification workflow | P0 |
+| FR-021 | Map and destination location display | P1 |
+| FR-022 | Traveler saved destinations | P1 |
+| FR-023 | Review and rating workflow | P1 |
+| FR-024 | Review reporting and moderation | P1 |
+| FR-025 | AI travel assistant | P1 |
+| FR-026 | AI-assisted travel planning | P1 |
+| FR-027 | Partner performance dashboard | P1 |
+| FR-028 | Administrative analytics | P1 |
+| FR-029 | Advanced location-based discovery | P2 |
+| FR-030 | Advanced traveler personalization | P2 |
+| FR-031 | Expanded AI capabilities | P2 |
+| FR-032 | Additional approved communication channels | P2 |
+
+The implementation sequence and release approval are governed by Document 12.
+
+---
+
+## 17. CROSS-MODULE FUNCTIONAL MAPPING
+The following mapping ensures that the functional requirements use the module identifiers already established in Document 01.
+
+| Module ID | Official Module Name | Primary Functional Responsibility |
+| :--- | :--- | :--- |
+| M01 | Tourism Information | General tourism guidance and information |
+| M02 | Destination Directory | Destination discovery and details |
+| M03 | Accommodation Directory | Accommodation discovery |
+| M04 | Transportation Directory | Transportation discovery |
+| M05 | Tours and Activities | Activity and tour discovery |
+| M06 | Business Directory | Tourism business discovery |
+| M07 | Booking Management | Inquiry and partner response workflow |
+| M08 | AI Ecosystem | AI-assisted tourism services |
+| M09 | Multilingual System | Language selection and localized content |
+| M10 | Map and Location System | Geographic information and location services |
+| M11 | Traveler Account | Traveler registration and profile |
+| M12 | Partner Account | Partner registration and dashboard |
+| M13 | Review and Reputation | Reviews, ratings and moderation |
+| M14 | Notification System | Platform notifications |
+| M15 | Payment and Financial System | Approved payment and financial capabilities |
+| M16 | Administration System | Administrative controls |
+| M17 | Analytics and Reporting | Platform and operational reporting |
+| M18 | Content Management System | Tourism content creation and management |
+
+**Important:** M15 remains an official platform module. Its inclusion does not mean automated payment processing is active in the initial release. Operational availability depends on approved integrations, implementation and testing.
+
+---
+
+## 18. BUSINESS MODEL AND FUNCTIONAL BOUNDARIES
+Document 02 establishes the official revenue framework. Document 03 implements only the relevant user-facing and operational interactions.
+
+The following revenue identifiers must remain unchanged:
+
+| Revenue ID | Revenue Stream | Functional Interaction |
+| :--- | :--- | :--- |
+| R01 | Accommodation Booking Commission | Accommodation inquiry and eligible booking workflow |
+| R02 | Tours and Packages Booking Commission | Tour and package inquiry workflow |
+| R03 | Transportation Referral or Booking Commission | Transportation service inquiry or referral |
+| R04 | Trekking and Activities Booking Commission | Trekking and activity inquiry workflow |
+| R05 | Travel Insurance Affiliate Commission | Access to approved insurance partner offers |
+| R06 | SIM and eSIM Affiliate Commission | Access to approved SIM/eSIM partner offers |
+| R07 | Business Subscription | Partner subscription management |
+| R08 | Featured Business Listing | Clearly identified promoted business placement |
+| R09 | Sponsored Content | Clearly identified sponsored content |
+| R10 | Advertising Revenue | Approved advertising placements |
+| R11 | Premium AI Services | Approved premium AI access |
+| R12 | Digital Travel Products | Digital product discovery and purchase workflow when operational |
+| R13 | Souvenir Marketplace | Marketplace discovery and transaction workflow when operational |
+| R14 | B2B Tourism Services | Business-facing service access and management |
+
+The table identifies functional touchpoints only. It does not establish commission rates, subscription prices, payment terms or revenue eligibility. Those remain governed by Document 02 and its pending commercial decisions.
+
+---
+
+## 19. SEARCH AND FILTERING REQUIREMENTS
+The search system should provide consistent discovery across relevant platform modules.
+
+### 19.1 Search Capabilities
+Where applicable, users should be able to search by:
+- Name.
+- Location.
+- Province.
+- District.
+- Category.
+- Service type.
+- Travel interest.
+- Relevant keywords.
+
+### 19.2 Search Result Requirements
+Search results should:
+- Display relevant information.
+- Provide access to detail pages.
+- Support applicable filters.
+- Distinguish sponsored placements from organic results.
+- Avoid presenting unavailable information as confirmed.
+- Handle empty results clearly.
+- Provide useful error and recovery messages.
+
+Search ranking rules must remain consistent with the trust and commercial governance in Documents 01 and 02.
+
+---
+
+## 20. CONTENT AND INFORMATION QUALITY REQUIREMENTS
+PHERI NEPAL must provide accurate, useful and understandable tourism information.
+The functional system should support:
+- Content publication review.
+- Content update records.
+- Source information where appropriate.
+- Translation review.
+- Outdated-content identification.
+- Correction of inaccurate information.
+- Image and media management.
+- Clear distinction between official information, partner-submitted information and editorial guidance.
+
+The platform must not label partner-submitted information as independently verified unless the relevant verification process has been completed.
+
+---
+
+## 21. ERROR HANDLING AND USER FEEDBACK
+The website should provide understandable responses when users encounter errors.
+Examples include:
+- Invalid registration information.
+- Failed sign-in.
+- Missing required inquiry details.
+- Unavailable search results.
+- Failed content loading.
+- Unavailable AI service.
+- Failed notification delivery.
+- Unauthorized account access.
+- Incomplete partner applications.
+
+Error messages should explain the issue without exposing confidential system information.
+Where possible, the user should be able to correct the problem and continue.
+
+---
+
+## 22. FUNCTIONAL ACCESSIBILITY AND RESPONSIVENESS
+The initial platform is a website and must support common desktop, tablet and mobile screen sizes.
+Functional expectations include:
+- Responsive navigation.
+- Readable text.
+- Accessible form labels.
+- Clear input validation.
+- Keyboard-accessible controls where applicable.
+- Understandable error messages.
+- Consistent page structure.
+- Appropriate image descriptions.
+- Usable multilingual navigation.
+
+Detailed visual standards are governed by Document 04.
+
+---
+
+## 23. FUNCTIONAL ACCEPTANCE CRITERIA
+A functional feature should not be considered complete merely because its interface exists.
+The following conditions must be satisfied where relevant:
+1. The intended user can access the feature with the correct permissions.
+2. Required information can be submitted successfully.
+3. Input validation works as specified.
+4. The system displays the correct result or status.
+5. Relevant records are retained through the approved data process.
+6. Unauthorized users cannot access restricted functionality.
+7. Relevant notifications are triggered where required.
+8. Error conditions are handled clearly.
+9. The feature works on supported mobile and desktop layouts.
+10. The feature does not contradict the governing documents.
+
+### 23.1 Booking Workflow Acceptance
+The booking inquiry workflow is acceptable when:
+- A traveler can submit an inquiry.
+- The system acknowledges receipt.
+- The relevant partner can access the inquiry.
+- The partner can submit a response.
+- The traveler can view the response.
+- Inquiry status is displayed correctly.
+- Booking status is not confused with payment status.
+- Inquiry submission is not represented as a confirmed booking.
+
+### 23.2 Partner Workflow Acceptance
+The partner workflow is acceptable when:
+- A partner can submit an application.
+- Required information is validated.
+- Verification status is visible.
+- Authorized staff can review applications.
+- Approved partners can manage permitted listings.
+- Partners can access only their authorized information.
+
+### 23.3 AI Workflow Acceptance
+The AI workflow is acceptable when:
+- Users can submit supported travel questions.
+- Responses are presented clearly.
+- Uncertain information is handled appropriately.
+- AI does not invent confirmed availability or transaction completion.
+- Relevant destination or service information can be accessed where supported.
+- Unavailable AI services produce a clear response.
+
+### 23.4 Multilingual Workflow Acceptance
+The multilingual foundation is acceptable when:
+- Users can select an available language.
+- Navigation reflects the selected language.
+- Supported content displays correctly.
+- Missing translations are handled clearly.
+- Language selection remains consistent during normal navigation.
+
+---
+
+## 24. PENDING FUNCTIONAL DECISIONS
+The following items require confirmation in their responsible documents before the corresponding functionality is treated as finalized.
+
+| Decision ID | Pending Decision | Responsible Document |
+| :--- | :--- | :--- |
+| FD-01 | Final selection of all 12 supported languages | Document 01 / Document 04 |
+| FD-02 | Detailed traveler and partner permission matrix | Document 10 |
+| FD-03 | Final booking status transition rules | Document 10 |
+| FD-04 | Exact review eligibility and verification rules | Document 09 / Document 10 |
+| FD-05 | Final notification channels | Document 07 |
+| FD-06 | Final map and location provider | Document 07 |
+| FD-07 | Detailed AI feature and usage limits | Document 08 |
+| FD-08 | Premium AI access conditions | Document 02 / Document 08 |
+| FD-09 | Payment activation conditions | Document 02 / Document 07 / Document 12 |
+| FD-10 | Final content approval and translation workflow | Document 10 |
+| FD-11 | Detailed functional release allocation | Document 12 |
+
+These pending decisions do not authorize the introduction of conflicting functionality.
+
+---
+
+## 25. DEPENDENCIES ON FUTURE DOCUMENTS
+Document 03 establishes functional expectations. The following documents must provide the implementation details:
+- **Document 04:** Page layouts, navigation structure, components, interaction design and design system.
+- **Document 05:** Application architecture, technology stack and system execution.
+- **Document 06:** Data entities, relationships, records and data lifecycle.
+- **Document 07:** API contracts and external service integrations.
+- **Document 08:** AI capabilities, service behaviour, evaluation and limitations.
+- **Document 09:** Privacy, security, consent and legal requirements.
+- **Document 10:** Operational procedures, partner management and administrative permissions.
+- **Document 11:** Marketing, search visibility and growth workflows.
+- **Document 12:** Functional testing, acceptance, deployment and maintenance.
+
+No future document should silently change the functional scope established here. Any approved change must be reflected consistently in the affected documents.
+
+---
+
+## 26. FINAL FUNCTIONAL GOVERNANCE STATEMENT
+This document establishes the official user journey and functional requirements framework for PHERI NEPAL.
+It is subordinate to the project scope and module definitions in Document 01 and the commercial framework in Document 02.
+
+The following principles are mandatory:
+1. All three travel stages must remain connected.
+2. All seven provinces and 77 districts must be supported by the destination information structure.
+3. The 12-language requirement must remain in scope.
+4. AI must remain a major ecosystem capability.
+5. The initial booking model must remain inquiry-based with partner response and confirmation.
+6. Automated booking and payment must not be claimed as operational before implementation and testing.
+7. The 18 module identifiers must remain consistent.
+8. The 14 revenue identifiers must remain consistent.
+9. Verification, paid promotion and organic ranking must remain distinct.
+10. User-facing functionality must follow the approved privacy, security and operational policies.
+
+---
+
+## 27. VERSION 2.0 FUNCTIONAL SPECIFICATIONS & AUDIT GAP RESOLUTIONS
+
+### 27.1 Low-Connectivity & Offline Survival Pack for "During Travel" (`FR-033` — Priority P0/P1)
+Because high-altitude trekking regions (Everest, Annapurna, Manaslu, Langtang, Dolpa, Humla) and rural highways frequently have intermittent or zero cellular data, the **During Travel** stage must implement an **Offline Travel Vault & Printable Field Brief**:
+1. **Automatic Local Storage / PWA Caching of Active Trip Essentials:**
+   - Whenever a Registered Traveler (`U02`) views their Saved Trip Plan, Confirmed Booking Arrangement (`M07`), or District Emergency Card (`M01`), the client caches a structured JSON snapshot in browser `localStorage` / IndexedDB.
+   - Displays a clear `"Cached for Offline Access (Last synced: [Timestamp])"` badge.
+2. **One-Click Printable / Downloadable Emergency & Itinerary Packet:**
+   - Every confirmed inquiry voucher and AI trip itinerary includes a **"Download Offline Trip Card / Print Summary"** action containing:
+     - Partner Verified Name, Physical Address, Landmark, and Direct Phone Numbers.
+     - 6-Digit Check-In Verification Code.
+     - Day-by-Day Elevation & Acclimatization Schedule.
+     - District Police, Tourist Police (`1144`), Embassy, and Nearest Hospital/HRA Aid Post numbers.
+
+### 27.2 Seamless Guest-to-Registered Traveler Inquiry Linking Workflow
+To prevent friction between Public Visitor (`U01`) exploration and Registered Traveler (`U02`) inquiry tracking:
+1. **Pre-Inquiry Quick Authentication or Magic Email Claim:**
+   - When a Public Visitor (`U01`) clicks **"Send Booking Inquiry"**, any typed inquiry form draft (dates, guest count, message, selected listing ID) is preserved in session storage across login/registration so zero form input is lost.
+   - If a guest submits a preliminary question or registers later using the same verified email address, an automated post-verification hook links all historical records matching `traveler_email` (where `email_verified = true`) to their new `user_id` (`ENT-001`).
+
+### 27.3 Nepal Trekking Permits, TIMS, National Park & Restricted Area Checklist Engine (`M01` / `M05`)
+Every destination (`M02`) and trekking/tour activity (`M05`) must expose a structured **Permit & Regulatory Compliance Matrix**:
+
+| Permit Category | Issuing Authority | Applicable Regions / Examples | Mandatory Rule in PHERI NEPAL UI & AI Planner |
+| :--- | :--- | :--- | :--- |
+| **TIMS Card** (Trekkers' Information Management System) | Nepal Tourism Board (NTB) / TAAN | Major trekking zones (Annapurna, Langtang, Everest region per local municipality rules) | Must display current licensed guide requirement and official issuance locations (Kathmandu/Pokhara NTB counters). |
+| **Conservation Area Permit (CAP)** | NTNC (National Trust for Nature Conservation) | ACAP (Annapurna), MCAP (Manaslu), GCAP (Gaurishankar) | Must display separate SAARC vs. Foreign National vs. Domestic NPR fee tiers as `Official Reference Fee (Subject to Government Update)`. |
+| **National Park Entry Permit** | Department of National Parks and Wildlife Conservation (DNPWC) | Sagarmatha, Chitwan, Bardiya, Langtang, Rara, Shey Phoksundo, Shivapuri-Nagarjun | Must link permit requirement automatically to any itinerary passing through the protected area boundary. |
+| **Rural Municipality Entry Permit** | Local Rural Municipality (Gaunpalika) | Khumbu Pasang Lhamu Rural Municipality (Everest region) | Must explicitly notify trekkers that Khumbu local permit replaces traditional TIMS where applicable. |
+| **Restricted Area Permit (RAP)** | Department of Immigration (DoI) | Upper Mustang, Upper Dolpa, Manaslu Circuit, Tsum Valley, Humla, Kanchenjunga, Nar Phu | Must display a prominent **Mandatory Rule Banner**: *"Requires minimum 2 trekkers, a licensed Nepal Government guide, and application through a registered Nepal Trekking Agency (`U03`). Solo permits are prohibited by law."* |
+
+---
+
+**Document 03 — User Journey and Functional Requirements Blueprint (PN-UJFR-003) — Version 2.0 (Detailed & Audit-Resolved)**
+**End of Document 03 of 12.**

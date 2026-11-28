@@ -1,0 +1,705 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================================================
+    // 0. GLOBAL DEFAULT-DENY SAFETY NET
+    // =========================================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // =========================================================================
+    // 1. HARDENED GLOBAL PRIMITIVES
+    // =========================================================================
+    function isSignedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isBootstrappedSuperAdmin() {
+      return isSignedIn() && request.auth.token.email == "adventurenepal04@gmail.com";
+    }
+
+    function isAdmin() {
+      return isBootstrappedSuperAdmin() || (
+        isSignedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roleCode in ['U05', 'U06', 'U07', 'U08', 'U09'] &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.accountStatus == 'Active'
+      );
+    }
+
+    // =========================================================================
+    // 2. VALIDATION BLUEPRINTS (THE ANTI-UPDATE-GAP)
+    // =========================================================================
+
+    function isValidUserPublicProfile(data) {
+      return data.keys().hasAll([
+        'uid', 'displayName', 'roleCode', 'accountStatus', 'preferredLanguage', 'createdAt', 'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'uid', 'displayName', 'roleCode', 'accountStatus', 'preferredLanguage', 'createdAt', 'updatedAt'
+      ]) &&
+      data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128 &&
+      data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 100 &&
+      data.roleCode is string && data.roleCode in ['U02', 'U03', 'U04', 'U05', 'U06', 'U07', 'U08', 'U09'] &&
+      data.accountStatus is string && data.accountStatus in ['Active', 'Suspended'] &&
+      data.preferredLanguage is string && data.preferredLanguage in ['L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L07', 'L08', 'L09', 'L10', 'L11', 'L12'] &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidUserPrivateInfo(data) {
+      return data.keys().hasAll([
+        'uid', 'email', 'phone', 'nationality', 'emergencyContact', 'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'uid', 'email', 'phone', 'nationality', 'emergencyContact', 'updatedAt'
+      ]) &&
+      data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128 &&
+      data.email is string && data.email.size() >= 3 && data.email.size() <= 200 &&
+      data.phone is string && data.phone.size() <= 40 &&
+      data.nationality is string && data.nationality.size() <= 80 &&
+      data.emergencyContact is string && data.emergencyContact.size() <= 200 &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidPartnerListing(data) {
+      return data.keys().hasAll([
+        'id', 'ownerUid', 'titleEn', 'titleNe', 'category', 'provinceId', 'districtName',
+        'municipality', 'summaryEn', 'summaryNe', 'priceNpr', 'priceUsdEstimate', 'pricingUnit',
+        'maxElevationMeters', 'durationDays', 'registrationNumber', 'panVatNumber',
+        'verificationStatus', 'listingStatus', 'subscriptionTier', 'isFeatured', 'isSponsored',
+        'ratingAvg', 'reviewCount', 'responseSlaHours', 'imageUrl', 'permitsRequired',
+        'createdAt', 'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'id', 'ownerUid', 'titleEn', 'titleNe', 'category', 'provinceId', 'districtName',
+        'municipality', 'summaryEn', 'summaryNe', 'priceNpr', 'priceUsdEstimate', 'pricingUnit',
+        'maxElevationMeters', 'durationDays', 'registrationNumber', 'panVatNumber',
+        'verificationStatus', 'listingStatus', 'subscriptionTier', 'isFeatured', 'isSponsored',
+        'ratingAvg', 'reviewCount', 'responseSlaHours', 'imageUrl', 'permitsRequired',
+        'createdAt', 'updatedAt'
+      ]) &&
+      data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+      data.ownerUid is string && data.ownerUid.size() >= 1 && data.ownerUid.size() <= 128 &&
+      data.titleEn is string && data.titleEn.size() >= 2 && data.titleEn.size() <= 160 &&
+      data.titleNe is string && data.titleNe.size() >= 1 && data.titleNe.size() <= 160 &&
+      data.category is string && data.category in ['Hotel', 'Homestay', 'Resort', 'Guide', 'TrekkingAgency', 'TourPackage', 'Transport', 'AdventureActivity'] &&
+      data.provinceId is string && data.provinceId in ['PR-01', 'PR-02', 'PR-03', 'PR-04', 'PR-05', 'PR-06', 'PR-07'] &&
+      data.districtName is string && data.districtName.size() >= 2 && data.districtName.size() <= 80 &&
+      data.municipality is string && data.municipality.size() >= 2 && data.municipality.size() <= 100 &&
+      data.summaryEn is string && data.summaryEn.size() >= 10 && data.summaryEn.size() <= 1200 &&
+      data.summaryNe is string && data.summaryNe.size() >= 5 && data.summaryNe.size() <= 1200 &&
+      data.priceNpr is number && data.priceNpr >= 0 && data.priceNpr <= 10000000 &&
+      data.priceUsdEstimate is number && data.priceUsdEstimate >= 0 && data.priceUsdEstimate <= 100000 &&
+      data.pricingUnit is string && data.pricingUnit in ['per_night', 'per_day', 'per_person', 'per_trip'] &&
+      data.maxElevationMeters is number && data.maxElevationMeters >= 50 && data.maxElevationMeters <= 8849 &&
+      data.durationDays is number && data.durationDays >= 1 && data.durationDays <= 120 &&
+      data.registrationNumber is string && data.registrationNumber.size() >= 2 && data.registrationNumber.size() <= 80 &&
+      data.panVatNumber is string && data.panVatNumber.size() >= 2 && data.panVatNumber.size() <= 80 &&
+      data.verificationStatus is string && data.verificationStatus in ['Pending', 'Verified', 'Rejected', 'Suspended', 'Expired'] &&
+      data.listingStatus is string && data.listingStatus in ['Draft', 'PendingReview', 'Published', 'Rejected', 'Suspended', 'Archived'] &&
+      data.subscriptionTier is string && data.subscriptionTier in ['Standard', 'Featured', 'Sponsored', 'Enterprise'] &&
+      data.isFeatured is bool &&
+      data.isSponsored is bool &&
+      data.ratingAvg is number && data.ratingAvg >= 0 && data.ratingAvg <= 5 &&
+      data.reviewCount is number && data.reviewCount >= 0 && data.reviewCount <= 1000000 &&
+      data.responseSlaHours is number && data.responseSlaHours >= 1 && data.responseSlaHours <= 168 &&
+      data.imageUrl is string && data.imageUrl.size() <= 500 &&
+      data.permitsRequired is string && data.permitsRequired.size() <= 300 &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidPartnerKyc(data) {
+      return data.keys().hasAll([
+        'id', 'listingId', 'partnerUid', 'businessLegalName', 'authorityName',
+        'licenseNumber', 'panVatNumber', 'licenseExpiryDate', 'contactPhone',
+        'contactEmail', 'documentSummary', 'verificationStatus', 'reviewerNotes',
+        'reviewedByUid', 'createdAt', 'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'id', 'listingId', 'partnerUid', 'businessLegalName', 'authorityName',
+        'licenseNumber', 'panVatNumber', 'licenseExpiryDate', 'contactPhone',
+        'contactEmail', 'documentSummary', 'verificationStatus', 'reviewerNotes',
+        'reviewedByUid', 'createdAt', 'updatedAt'
+      ]) &&
+      data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+      data.listingId is string && data.listingId.size() >= 1 && data.listingId.size() <= 128 &&
+      data.partnerUid is string && data.partnerUid.size() >= 1 && data.partnerUid.size() <= 128 &&
+      data.businessLegalName is string && data.businessLegalName.size() >= 2 && data.businessLegalName.size() <= 160 &&
+      data.authorityName is string && data.authorityName in ['DOT', 'NTB', 'TAAN', 'NMA', 'CompanyRegistrar', 'LocalMunicipality'] &&
+      data.licenseNumber is string && data.licenseNumber.size() >= 2 && data.licenseNumber.size() <= 80 &&
+      data.panVatNumber is string && data.panVatNumber.size() >= 2 && data.panVatNumber.size() <= 80 &&
+      data.licenseExpiryDate is string && data.licenseExpiryDate.size() >= 4 && data.licenseExpiryDate.size() <= 40 &&
+      data.contactPhone is string && data.contactPhone.size() >= 5 && data.contactPhone.size() <= 40 &&
+      data.contactEmail is string && data.contactEmail.size() >= 5 && data.contactEmail.size() <= 160 &&
+      data.documentSummary is string && data.documentSummary.size() >= 5 && data.documentSummary.size() <= 600 &&
+      data.verificationStatus is string && data.verificationStatus in ['Pending', 'Verified', 'Rejected', 'Suspended', 'Expired'] &&
+      data.reviewerNotes is string && data.reviewerNotes.size() <= 600 &&
+      data.reviewedByUid is string && data.reviewedByUid.size() <= 128 &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidBookingInquiry(data) {
+      return data.keys().hasAll([
+        'id', 'travelerUid', 'travelerName', 'travelerEmail', 'travelerPhone',
+        'partnerUid', 'listingId', 'listingTitle', 'listingCategory', 'provinceId',
+        'districtName', 'preferredStartDate', 'preferredEndDate', 'groupSize',
+        'travelerNotes', 'partnerResponseNotes', 'quotedTotalNpr', 'commissionRatePercent',
+        'expectedCommissionNpr', 'revenueStreamCode', 'vcvCode', 'inquiryStatus',
+        'arrangementStatus', 'paymentStatus', 'commissionStatus', 'createdAt', 'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'id', 'travelerUid', 'travelerName', 'travelerEmail', 'travelerPhone',
+        'partnerUid', 'listingId', 'listingTitle', 'listingCategory', 'provinceId',
+        'districtName', 'preferredStartDate', 'preferredEndDate', 'groupSize',
+        'travelerNotes', 'partnerResponseNotes', 'quotedTotalNpr', 'commissionRatePercent',
+        'expectedCommissionNpr', 'revenueStreamCode', 'vcvCode', 'inquiryStatus',
+        'arrangementStatus', 'paymentStatus', 'commissionStatus', 'createdAt', 'updatedAt'
+      ]) &&
+      data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+      data.travelerUid is string && data.travelerUid.size() >= 1 && data.travelerUid.size() <= 128 &&
+      data.travelerName is string && data.travelerName.size() >= 1 && data.travelerName.size() <= 120 &&
+      data.travelerEmail is string && data.travelerEmail.size() >= 3 && data.travelerEmail.size() <= 160 &&
+      data.travelerPhone is string && data.travelerPhone.size() >= 3 && data.travelerPhone.size() <= 40 &&
+      data.partnerUid is string && data.partnerUid.size() >= 1 && data.partnerUid.size() <= 128 &&
+      data.listingId is string && data.listingId.size() >= 1 && data.listingId.size() <= 128 &&
+      data.listingTitle is string && data.listingTitle.size() >= 2 && data.listingTitle.size() <= 160 &&
+      data.listingCategory is string && data.listingCategory.size() >= 2 && data.listingCategory.size() <= 60 &&
+      data.provinceId is string && data.provinceId.size() >= 2 && data.provinceId.size() <= 20 &&
+      data.districtName is string && data.districtName.size() >= 2 && data.districtName.size() <= 80 &&
+      data.preferredStartDate is string && data.preferredStartDate.size() >= 4 && data.preferredStartDate.size() <= 40 &&
+      data.preferredEndDate is string && data.preferredEndDate.size() >= 4 && data.preferredEndDate.size() <= 40 &&
+      data.groupSize is number && data.groupSize >= 1 && data.groupSize <= 100 &&
+      data.travelerNotes is string && data.travelerNotes.size() >= 2 && data.travelerNotes.size() <= 1000 &&
+      data.partnerResponseNotes is string && data.partnerResponseNotes.size() <= 1000 &&
+      data.quotedTotalNpr is number && data.quotedTotalNpr >= 0 && data.quotedTotalNpr <= 50000000 &&
+      data.commissionRatePercent is number && data.commissionRatePercent >= 0 && data.commissionRatePercent <= 35 &&
+      data.expectedCommissionNpr is number && data.expectedCommissionNpr >= 0 && data.expectedCommissionNpr <= 20000000 &&
+      data.revenueStreamCode is string && data.revenueStreamCode in ['R01', 'R02', 'R03', 'R04', 'R05', 'R06'] &&
+      data.vcvCode is string && data.vcvCode.size() >= 4 && data.vcvCode.size() <= 40 &&
+      data.inquiryStatus is string && data.inquiryStatus in ['Submitted', 'Delivered', 'Responded', 'Confirmed', 'Declined', 'Expired', 'Cancelled'] &&
+      data.arrangementStatus is string && data.arrangementStatus in ['Pending', 'ConfirmedByPartner', 'Completed', 'Cancelled', 'NoShow'] &&
+      data.paymentStatus is string && data.paymentStatus in ['NotApplicable', 'Inactive', 'Pending', 'Authorized', 'Captured', 'Failed'] &&
+      data.commissionStatus is string && data.commissionStatus in ['Pending', 'Eligible', 'Invoiced', 'Settled', 'Reversed', 'Waived'] &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidTravelerItinerary(data) {
+      return data.keys().hasAll([
+        'id', 'ownerUid', 'title', 'provinceId', 'durationDays', 'budgetTier',
+        'maxElevationMeters', 'acclimatizationCompliant', 'permitsChecklist',
+        'planMarkdown', 'offlinePackReady', 'createdAt', 'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'id', 'ownerUid', 'title', 'provinceId', 'durationDays', 'budgetTier',
+        'maxElevationMeters', 'acclimatizationCompliant', 'permitsChecklist',
+        'planMarkdown', 'offlinePackReady', 'createdAt', 'updatedAt'
+      ]) &&
+      data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+      data.ownerUid is string && data.ownerUid.size() >= 1 && data.ownerUid.size() <= 128 &&
+      data.title is string && data.title.size() >= 2 && data.title.size() <= 160 &&
+      data.provinceId is string && data.provinceId.size() >= 2 && data.provinceId.size() <= 20 &&
+      data.durationDays is number && data.durationDays >= 1 && data.durationDays <= 90 &&
+      data.budgetTier is string && data.budgetTier in ['Budget', 'Standard', 'Comfort', 'Luxury'] &&
+      data.maxElevationMeters is number && data.maxElevationMeters >= 50 && data.maxElevationMeters <= 8849 &&
+      data.acclimatizationCompliant is bool &&
+      data.permitsChecklist is string && data.permitsChecklist.size() <= 500 &&
+      data.planMarkdown is string && data.planMarkdown.size() >= 10 && data.planMarkdown.size() <= 8000 &&
+      data.offlinePackReady is bool &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidTravelerReview(data) {
+      return data.keys().hasAll([
+        'id', 'listingId', 'authorUid', 'authorName', 'vcvCode', 'rating',
+        'comment', 'moderationStatus', 'createdAt', 'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'id', 'listingId', 'authorUid', 'authorName', 'vcvCode', 'rating',
+        'comment', 'moderationStatus', 'createdAt', 'updatedAt'
+      ]) &&
+      data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+      data.listingId is string && data.listingId.size() >= 1 && data.listingId.size() <= 128 &&
+      data.authorUid is string && data.authorUid.size() >= 1 && data.authorUid.size() <= 128 &&
+      data.authorName is string && data.authorName.size() >= 1 && data.authorName.size() <= 100 &&
+      data.vcvCode is string && data.vcvCode.size() <= 40 &&
+      data.rating is number && data.rating >= 1 && data.rating <= 5 &&
+      data.comment is string && data.comment.size() >= 5 && data.comment.size() <= 1200 &&
+      data.moderationStatus is string && data.moderationStatus in ['Published', 'Flagged', 'Removed'] &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidSupportCase(data) {
+      return data.keys().hasAll([
+        'id', 'reporterUid', 'reporterName', 'category', 'priority',
+        'provinceId', 'districtName', 'subject', 'description',
+        'resolutionNotes', 'caseStatus', 'createdAt', 'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'id', 'reporterUid', 'reporterName', 'category', 'priority',
+        'provinceId', 'districtName', 'subject', 'description',
+        'resolutionNotes', 'caseStatus', 'createdAt', 'updatedAt'
+      ]) &&
+      data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+      data.reporterUid is string && data.reporterUid.size() >= 1 && data.reporterUid.size() <= 128 &&
+      data.reporterName is string && data.reporterName.size() >= 1 && data.reporterName.size() <= 100 &&
+      data.category is string && data.category in ['EmergencyRouting', 'InquiryDelay', 'KycDispute', 'SafetyConcern', 'GeneralSupport'] &&
+      data.priority is string && data.priority in ['Critical', 'High', 'Normal'] &&
+      data.provinceId is string && data.provinceId.size() >= 2 && data.provinceId.size() <= 20 &&
+      data.districtName is string && data.districtName.size() >= 2 && data.districtName.size() <= 80 &&
+      data.subject is string && data.subject.size() >= 3 && data.subject.size() <= 160 &&
+      data.description is string && data.description.size() >= 5 && data.description.size() <= 1500 &&
+      data.resolutionNotes is string && data.resolutionNotes.size() <= 1000 &&
+      data.caseStatus is string && data.caseStatus in ['Open', 'InProgress', 'Resolved', 'Closed'] &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidAuditLog(data) {
+      return data.keys().hasAll([
+        'id', 'actorUid', 'actorEmail', 'actorRole', 'actionType',
+        'targetEntityType', 'targetEntityId', 'reason', 'createdAt'
+      ]) &&
+      data.keys().hasOnly([
+        'id', 'actorUid', 'actorEmail', 'actorRole', 'actionType',
+        'targetEntityType', 'targetEntityId', 'reason', 'createdAt'
+      ]) &&
+      data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+      data.actorUid is string && data.actorUid.size() >= 1 && data.actorUid.size() <= 128 &&
+      data.actorEmail is string && data.actorEmail.size() >= 3 && data.actorEmail.size() <= 160 &&
+      data.actorRole is string && data.actorRole.size() >= 2 && data.actorRole.size() <= 20 &&
+      data.actionType is string && data.actionType.size() >= 2 && data.actionType.size() <= 80 &&
+      data.targetEntityType is string && data.targetEntityType.size() >= 2 && data.targetEntityType.size() <= 60 &&
+      data.targetEntityId is string && data.targetEntityId.size() >= 1 && data.targetEntityId.size() <= 128 &&
+      data.reason is string && data.reason.size() >= 2 && data.reason.size() <= 600 &&
+      data.createdAt is timestamp;
+    }
+
+    // =========================================================================
+    // 3. COLLECTION RULES
+    // =========================================================================
+
+    // --- ENT-001 / ENT-002: Public User Profiles (No PII) ---
+    match /users/{userId} {
+      allow get: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow list: if isSignedIn() && (existing().uid == request.auth.uid || isBootstrappedSuperAdmin());
+
+      allow create: if isSignedIn() &&
+        isValidId(userId) &&
+        isValidUserPublicProfile(incoming()) &&
+        incoming().uid == userId &&
+        incoming().uid == request.auth.uid &&
+        incoming().accountStatus == 'Active' &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        (
+          incoming().roleCode in ['U02', 'U03'] ||
+          (isBootstrappedSuperAdmin() && incoming().roleCode == 'U09')
+        );
+
+      allow update: if isSignedIn() &&
+        isValidId(userId) &&
+        isValidUserPublicProfile(incoming()) &&
+        incoming().uid == existing().uid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        (
+          // Action 1: Owner updates displayName or preferredLanguage, or switches between Traveler (U02) and Partner (U03)
+          (
+            isOwner(userId) &&
+            existing().accountStatus == 'Active' &&
+            incoming().accountStatus == existing().accountStatus &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'preferredLanguage', 'roleCode', 'updatedAt']) &&
+            (
+              incoming().roleCode == existing().roleCode ||
+              (existing().roleCode in ['U02', 'U03'] && incoming().roleCode in ['U02', 'U03'])
+            )
+          ) ||
+          // Action 2: Admin governance role/status management
+          isAdmin()
+        );
+
+      allow delete: if false;
+
+      // --- ENT-002: Isolated Private PII Subcollection ---
+      match /private/{docId} {
+        allow get: if isValidId(userId) && isValidId(docId) &&
+          exists(/databases/$(database)/documents/users/$(userId)) &&
+          (isOwner(userId) || isAdmin());
+
+        allow list: if false;
+
+        allow create: if isSignedIn() &&
+          isValidId(userId) &&
+          isValidId(docId) &&
+          isOwner(userId) &&
+          isValidUserPrivateInfo(incoming()) &&
+          incoming().uid == userId &&
+          incoming().uid == request.auth.uid &&
+          incoming().updatedAt == request.time &&
+          exists(/databases/$(database)/documents/users/$(userId));
+
+        allow update: if isSignedIn() &&
+          isValidId(userId) &&
+          isValidId(docId) &&
+          isValidUserPrivateInfo(incoming()) &&
+          incoming().uid == existing().uid &&
+          incoming().updatedAt == request.time &&
+          exists(/databases/$(database)/documents/users/$(userId)) &&
+          (
+            (
+              isOwner(userId) &&
+              incoming().diff(existing()).affectedKeys().hasOnly(['email', 'phone', 'nationality', 'emergencyContact', 'updatedAt'])
+            ) ||
+            isAdmin()
+          );
+
+        allow delete: if false;
+      }
+    }
+
+    // --- ENT-016 / ENT-019: Partner Listings across 7 Provinces & 77 Districts ---
+    match /partner_listings/{listingId} {
+      allow get: if isValidId(listingId) && (
+        existing().listingStatus == 'Published' ||
+        (isSignedIn() && existing().ownerUid == request.auth.uid) ||
+        isAdmin()
+      );
+
+      allow list: if existing().listingStatus == 'Published' ||
+        (isSignedIn() && existing().ownerUid == request.auth.uid) ||
+        isBootstrappedSuperAdmin();
+
+      allow create: if isSignedIn() &&
+        isValidId(listingId) &&
+        isValidPartnerListing(incoming()) &&
+        incoming().id == listingId &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        (
+          // Partner creates own listing (MUST start Pending verification, non-featured, non-sponsored)
+          (
+            incoming().ownerUid == request.auth.uid &&
+            incoming().verificationStatus == 'Pending' &&
+            incoming().isFeatured == false &&
+            incoming().isSponsored == false
+          ) ||
+          // Admin governance creation (must also start Pending unless verified via U05 KYC audit)
+          (
+            isAdmin() &&
+            incoming().verificationStatus == 'Pending'
+          )
+        );
+
+      allow update: if isSignedIn() &&
+        isValidId(listingId) &&
+        isValidPartnerListing(incoming()) &&
+        incoming().id == existing().id &&
+        incoming().ownerUid == existing().ownerUid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        (
+          // Action 1: Partner updates content/pricing/subscription request without changing verificationStatus or promotional flags
+          (
+            existing().ownerUid == request.auth.uid &&
+            existing().listingStatus != 'Suspended' &&
+            incoming().verificationStatus == existing().verificationStatus &&
+            incoming().isFeatured == existing().isFeatured &&
+            incoming().isSponsored == existing().isSponsored &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'titleEn', 'titleNe', 'summaryEn', 'summaryNe', 'priceNpr', 'priceUsdEstimate',
+              'pricingUnit', 'maxElevationMeters', 'durationDays', 'municipality',
+              'imageUrl', 'permitsRequired', 'subscriptionTier', 'listingStatus', 'updatedAt'
+            ])
+          ) ||
+          // Action 2: Admin / Verification Officer updates verificationStatus, featured/sponsored placement, or moderation state
+          isAdmin()
+        );
+
+      allow delete: if isValidId(listingId) && isAdmin();
+    }
+
+    // --- ENT-017 / ENT-018: Isolated Partner KYC Verification Submissions ---
+    match /partner_kyc/{kycId} {
+      allow get: if isValidId(kycId) && isSignedIn() && (
+        existing().partnerUid == request.auth.uid ||
+        isAdmin()
+      );
+
+      allow list: if isSignedIn() && (
+        existing().partnerUid == request.auth.uid ||
+        isBootstrappedSuperAdmin()
+      );
+
+      allow create: if isSignedIn() &&
+        isValidId(kycId) &&
+        isValidPartnerKyc(incoming()) &&
+        incoming().id == kycId &&
+        incoming().partnerUid == request.auth.uid &&
+        incoming().verificationStatus == 'Pending' &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        exists(/databases/$(database)/documents/partner_listings/$(incoming().listingId));
+
+      allow update: if isSignedIn() &&
+        isValidId(kycId) &&
+        isValidPartnerKyc(incoming()) &&
+        incoming().id == existing().id &&
+        incoming().listingId == existing().listingId &&
+        incoming().partnerUid == existing().partnerUid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        (
+          // Action 1: Partner resubmits updated KYC evidence when Pending or Rejected
+          (
+            existing().partnerUid == request.auth.uid &&
+            existing().verificationStatus in ['Pending', 'Rejected', 'Expired'] &&
+            incoming().verificationStatus == 'Pending' &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'businessLegalName', 'authorityName', 'licenseNumber', 'panVatNumber',
+              'licenseExpiryDate', 'contactPhone', 'contactEmail', 'documentSummary',
+              'verificationStatus', 'updatedAt'
+            ])
+          ) ||
+          // Action 2: Admin / Verification Officer (U05/U09) records verification decision
+          isAdmin()
+        );
+
+      allow delete: if false;
+    }
+
+    // --- ENT-023 / ENT-025 / ENT-029: Inquiry-First Booking & Arrangement Records ---
+    match /booking_inquiries/{inquiryId} {
+      allow get: if isValidId(inquiryId) && isSignedIn() && (
+        existing().travelerUid == request.auth.uid ||
+        existing().partnerUid == request.auth.uid ||
+        isAdmin()
+      );
+
+      allow list: if isSignedIn() && (
+        existing().travelerUid == request.auth.uid ||
+        existing().partnerUid == request.auth.uid ||
+        isBootstrappedSuperAdmin()
+      );
+
+      allow create: if isSignedIn() &&
+        isValidId(inquiryId) &&
+        isValidBookingInquiry(incoming()) &&
+        incoming().id == inquiryId &&
+        incoming().travelerUid == request.auth.uid &&
+        incoming().inquiryStatus == 'Submitted' &&
+        incoming().arrangementStatus == 'Pending' &&
+        incoming().paymentStatus == 'Inactive' &&
+        incoming().commissionStatus == 'Pending' &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        exists(/databases/$(database)/documents/partner_listings/$(incoming().listingId));
+
+      allow update: if isSignedIn() &&
+        isValidId(inquiryId) &&
+        isValidBookingInquiry(incoming()) &&
+        incoming().id == existing().id &&
+        incoming().travelerUid == existing().travelerUid &&
+        incoming().partnerUid == existing().partnerUid &&
+        incoming().listingId == existing().listingId &&
+        incoming().vcvCode == existing().vcvCode &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        (
+          // Action 1: Partner responds, confirms, or declines a non-terminal inquiry (payments remain Inactive)
+          (
+            existing().partnerUid == request.auth.uid &&
+            !(existing().inquiryStatus in ['Declined', 'Expired', 'Cancelled']) &&
+            incoming().paymentStatus == existing().paymentStatus &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'partnerResponseNotes', 'quotedTotalNpr', 'expectedCommissionNpr',
+              'inquiryStatus', 'arrangementStatus', 'commissionStatus', 'updatedAt'
+            ])
+          ) ||
+          // Action 2: Traveler cancels their own non-terminal inquiry
+          (
+            existing().travelerUid == request.auth.uid &&
+            !(existing().inquiryStatus in ['Declined', 'Expired', 'Cancelled']) &&
+            incoming().inquiryStatus == 'Cancelled' &&
+            incoming().arrangementStatus == 'Cancelled' &&
+            incoming().paymentStatus == existing().paymentStatus &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'inquiryStatus', 'arrangementStatus', 'travelerNotes', 'updatedAt'
+            ])
+          ) ||
+          // Action 3: Admin / Finance / Operations settlement or dispute override
+          isAdmin()
+        );
+
+      allow delete: if false;
+    }
+
+    // --- ENT-013 / ENT-014: Saved Traveler Itineraries ---
+    match /traveler_itineraries/{itineraryId} {
+      allow get: if isValidId(itineraryId) && isSignedIn() && (
+        existing().ownerUid == request.auth.uid ||
+        isAdmin()
+      );
+
+      allow list: if isSignedIn() && (
+        existing().ownerUid == request.auth.uid ||
+        isBootstrappedSuperAdmin()
+      );
+
+      allow create: if isSignedIn() &&
+        isValidId(itineraryId) &&
+        isValidTravelerItinerary(incoming()) &&
+        incoming().id == itineraryId &&
+        incoming().ownerUid == request.auth.uid &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+
+      allow update: if isSignedIn() &&
+        isValidId(itineraryId) &&
+        isValidTravelerItinerary(incoming()) &&
+        incoming().id == existing().id &&
+        incoming().ownerUid == existing().ownerUid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        (
+          (
+            existing().ownerUid == request.auth.uid &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'title', 'durationDays', 'budgetTier', 'maxElevationMeters',
+              'acclimatizationCompliant', 'permitsChecklist', 'planMarkdown',
+              'offlinePackReady', 'updatedAt'
+            ])
+          ) ||
+          isAdmin()
+        );
+
+      allow delete: if isValidId(itineraryId) && isSignedIn() && (
+        existing().ownerUid == request.auth.uid ||
+        isAdmin()
+      );
+    }
+
+    // --- ENT-035: Verified Traveler Reviews ---
+    match /traveler_reviews/{reviewId} {
+      allow get: if isValidId(reviewId) && (
+        existing().moderationStatus == 'Published' ||
+        (isSignedIn() && existing().authorUid == request.auth.uid) ||
+        isAdmin()
+      );
+
+      allow list: if existing().moderationStatus == 'Published' ||
+        (isSignedIn() && existing().authorUid == request.auth.uid) ||
+        isBootstrappedSuperAdmin();
+
+      allow create: if isSignedIn() &&
+        isValidId(reviewId) &&
+        isValidTravelerReview(incoming()) &&
+        incoming().id == reviewId &&
+        incoming().authorUid == request.auth.uid &&
+        incoming().moderationStatus == 'Published' &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        exists(/databases/$(database)/documents/partner_listings/$(incoming().listingId));
+
+      allow update: if isSignedIn() &&
+        isValidId(reviewId) &&
+        isValidTravelerReview(incoming()) &&
+        incoming().id == existing().id &&
+        incoming().listingId == existing().listingId &&
+        incoming().authorUid == existing().authorUid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        (
+          (
+            existing().authorUid == request.auth.uid &&
+            existing().moderationStatus == 'Published' &&
+            incoming().moderationStatus == 'Published' &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['rating', 'comment', 'updatedAt'])
+          ) ||
+          isAdmin()
+        );
+
+      allow delete: if isValidId(reviewId) && isAdmin();
+    }
+
+    // --- ENT-036: Support Cases & Emergency Routing Logs ---
+    match /support_cases/{caseId} {
+      allow get: if isValidId(caseId) && isSignedIn() && (
+        existing().reporterUid == request.auth.uid ||
+        isAdmin()
+      );
+
+      allow list: if isSignedIn() && (
+        existing().reporterUid == request.auth.uid ||
+        isBootstrappedSuperAdmin()
+      );
+
+      allow create: if isSignedIn() &&
+        isValidId(caseId) &&
+        isValidSupportCase(incoming()) &&
+        incoming().id == caseId &&
+        incoming().reporterUid == request.auth.uid &&
+        incoming().caseStatus == 'Open' &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+
+      allow update: if isSignedIn() &&
+        isValidId(caseId) &&
+        isValidSupportCase(incoming()) &&
+        incoming().id == existing().id &&
+        incoming().reporterUid == existing().reporterUid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        (
+          (
+            existing().reporterUid == request.auth.uid &&
+            existing().caseStatus != 'Closed' &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['description', 'caseStatus', 'updatedAt'])
+          ) ||
+          isAdmin()
+        );
+
+      allow delete: if false;
+    }
+
+    // --- ENT-038: Immutable Administrative Audit Logs ---
+    match /audit_logs/{logId} {
+      allow get: if isValidId(logId) && isAdmin();
+      allow list: if isBootstrappedSuperAdmin();
+
+      allow create: if isSignedIn() &&
+        isValidId(logId) &&
+        isValidAuditLog(incoming()) &&
+        incoming().id == logId &&
+        incoming().actorUid == request.auth.uid &&
+        incoming().createdAt == request.time &&
+        isAdmin();
+
+      allow update, delete: if false;
+    }
+  }
+}

@@ -1,0 +1,431 @@
+{
+  "entities": {
+    "UserPublicProfile": {
+      "title": "ENT-001 / ENT-002 User Public Profile",
+      "description": "Public display profile and role status for a registered PHERI NEPAL account (no PII email/phone).",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "roleCode": {
+          "type": "string",
+          "enum": ["U02", "U03", "U04", "U05", "U06", "U07", "U08", "U09"]
+        },
+        "accountStatus": {
+          "type": "string",
+          "enum": ["Active", "Suspended"]
+        },
+        "preferredLanguage": {
+          "type": "string",
+          "enum": ["L01", "L02", "L03", "L04", "L05", "L06", "L07", "L08", "L09", "L10", "L11", "L12"]
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "roleCode", "accountStatus", "preferredLanguage", "createdAt", "updatedAt"]
+    },
+    "UserPrivateInfo": {
+      "title": "ENT-002 User Private Contact & PII Info",
+      "description": "Isolated PII contact details strictly accessible only by the account owner or platform admin.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 200 },
+        "phone": { "type": "string", "maxLength": 40 },
+        "nationality": { "type": "string", "maxLength": 80 },
+        "emergencyContact": { "type": "string", "maxLength": 200 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "updatedAt"]
+    },
+    "PartnerListing": {
+      "title": "ENT-016 / ENT-019 Partner Business Profile & Service Listing",
+      "description": "Unified partner profile and service listing across Nepal's 7 provinces and 77 districts with independent evidence-based verificationStatus and subscriptionTier.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "titleEn": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "titleNe": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "category": {
+          "type": "string",
+          "enum": ["Hotel", "Homestay", "Resort", "Guide", "TrekkingAgency", "TourPackage", "Transport", "AdventureActivity"]
+        },
+        "provinceId": {
+          "type": "string",
+          "enum": ["PR-01", "PR-02", "PR-03", "PR-04", "PR-05", "PR-06", "PR-07"]
+        },
+        "districtName": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "municipality": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "summaryEn": { "type": "string", "minLength": 10, "maxLength": 1200 },
+        "summaryNe": { "type": "string", "minLength": 5, "maxLength": 1200 },
+        "priceNpr": { "type": "number" },
+        "priceUsdEstimate": { "type": "number" },
+        "pricingUnit": {
+          "type": "string",
+          "enum": ["per_night", "per_day", "per_person", "per_trip"]
+        },
+        "maxElevationMeters": { "type": "number" },
+        "durationDays": { "type": "number" },
+        "registrationNumber": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "panVatNumber": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "verificationStatus": {
+          "type": "string",
+          "enum": ["Pending", "Verified", "Rejected", "Suspended", "Expired"]
+        },
+        "listingStatus": {
+          "type": "string",
+          "enum": ["Draft", "PendingReview", "Published", "Rejected", "Suspended", "Archived"]
+        },
+        "subscriptionTier": {
+          "type": "string",
+          "enum": ["Standard", "Featured", "Sponsored", "Enterprise"]
+        },
+        "isFeatured": { "type": "boolean" },
+        "isSponsored": { "type": "boolean" },
+        "ratingAvg": { "type": "number" },
+        "reviewCount": { "type": "number" },
+        "responseSlaHours": { "type": "number" },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "permitsRequired": { "type": "string", "maxLength": 300 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "ownerUid",
+        "titleEn",
+        "titleNe",
+        "category",
+        "provinceId",
+        "districtName",
+        "municipality",
+        "summaryEn",
+        "summaryNe",
+        "priceNpr",
+        "priceUsdEstimate",
+        "pricingUnit",
+        "maxElevationMeters",
+        "durationDays",
+        "registrationNumber",
+        "panVatNumber",
+        "verificationStatus",
+        "listingStatus",
+        "subscriptionTier",
+        "isFeatured",
+        "isSponsored",
+        "ratingAvg",
+        "reviewCount",
+        "responseSlaHours",
+        "imageUrl",
+        "permitsRequired",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "PartnerKycSubmission": {
+      "title": "ENT-017 / ENT-018 Partner KYC & Verification Submission",
+      "description": "Isolated KYC document metadata and verification audit decision record (strictly restricted to Partner owner and Verification/Admin staff).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "listingId": { "type": "string", "maxLength": 128 },
+        "partnerUid": { "type": "string", "maxLength": 128 },
+        "businessLegalName": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "authorityName": {
+          "type": "string",
+          "enum": ["DOT", "NTB", "TAAN", "NMA", "CompanyRegistrar", "LocalMunicipality"]
+        },
+        "licenseNumber": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "panVatNumber": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "licenseExpiryDate": { "type": "string", "maxLength": 40 },
+        "contactPhone": { "type": "string", "minLength": 5, "maxLength": 40 },
+        "contactEmail": { "type": "string", "minLength": 5, "maxLength": 160 },
+        "documentSummary": { "type": "string", "minLength": 5, "maxLength": 600 },
+        "verificationStatus": {
+          "type": "string",
+          "enum": ["Pending", "Verified", "Rejected", "Suspended", "Expired"]
+        },
+        "reviewerNotes": { "type": "string", "maxLength": 600 },
+        "reviewedByUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "listingId",
+        "partnerUid",
+        "businessLegalName",
+        "authorityName",
+        "licenseNumber",
+        "panVatNumber",
+        "licenseExpiryDate",
+        "contactPhone",
+        "contactEmail",
+        "documentSummary",
+        "verificationStatus",
+        "reviewerNotes",
+        "reviewedByUid",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "BookingInquiry": {
+      "title": "ENT-023 / ENT-025 / ENT-029 Booking Inquiry & Arrangement Record",
+      "description": "Inquiry-First booking record enforcing strict separation of inquiryStatus, arrangementStatus, paymentStatus (Inactive), commissionStatus, and anti-leakage Verified Check-In Voucher (VCV) code.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "travelerUid": { "type": "string", "maxLength": 128 },
+        "travelerName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "travelerEmail": { "type": "string", "minLength": 3, "maxLength": 160 },
+        "travelerPhone": { "type": "string", "minLength": 3, "maxLength": 40 },
+        "partnerUid": { "type": "string", "maxLength": 128 },
+        "listingId": { "type": "string", "maxLength": 128 },
+        "listingTitle": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "listingCategory": { "type": "string", "maxLength": 60 },
+        "provinceId": { "type": "string", "maxLength": 20 },
+        "districtName": { "type": "string", "maxLength": 80 },
+        "preferredStartDate": { "type": "string", "minLength": 4, "maxLength": 40 },
+        "preferredEndDate": { "type": "string", "minLength": 4, "maxLength": 40 },
+        "groupSize": { "type": "number" },
+        "travelerNotes": { "type": "string", "minLength": 2, "maxLength": 1000 },
+        "partnerResponseNotes": { "type": "string", "maxLength": 1000 },
+        "quotedTotalNpr": { "type": "number" },
+        "commissionRatePercent": { "type": "number" },
+        "expectedCommissionNpr": { "type": "number" },
+        "revenueStreamCode": {
+          "type": "string",
+          "enum": ["R01", "R02", "R03", "R04", "R05", "R06"]
+        },
+        "vcvCode": { "type": "string", "minLength": 4, "maxLength": 40 },
+        "inquiryStatus": {
+          "type": "string",
+          "enum": ["Submitted", "Delivered", "Responded", "Confirmed", "Declined", "Expired", "Cancelled"]
+        },
+        "arrangementStatus": {
+          "type": "string",
+          "enum": ["Pending", "ConfirmedByPartner", "Completed", "Cancelled", "NoShow"]
+        },
+        "paymentStatus": {
+          "type": "string",
+          "enum": ["NotApplicable", "Inactive", "Pending", "Authorized", "Captured", "Failed"]
+        },
+        "commissionStatus": {
+          "type": "string",
+          "enum": ["Pending", "Eligible", "Invoiced", "Settled", "Reversed", "Waived"]
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "travelerUid",
+        "travelerName",
+        "travelerEmail",
+        "travelerPhone",
+        "partnerUid",
+        "listingId",
+        "listingTitle",
+        "listingCategory",
+        "provinceId",
+        "districtName",
+        "preferredStartDate",
+        "preferredEndDate",
+        "groupSize",
+        "travelerNotes",
+        "partnerResponseNotes",
+        "quotedTotalNpr",
+        "commissionRatePercent",
+        "expectedCommissionNpr",
+        "revenueStreamCode",
+        "vcvCode",
+        "inquiryStatus",
+        "arrangementStatus",
+        "paymentStatus",
+        "commissionStatus",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "TravelerItinerary": {
+      "title": "ENT-013 / ENT-014 Saved Trip Plan & AI Itinerary",
+      "description": "Traveler's saved multi-day Nepal itinerary with high-altitude acclimatization guardrails and realistic mountain highway durations.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "provinceId": { "type": "string", "maxLength": 20 },
+        "durationDays": { "type": "number" },
+        "budgetTier": {
+          "type": "string",
+          "enum": ["Budget", "Standard", "Comfort", "Luxury"]
+        },
+        "maxElevationMeters": { "type": "number" },
+        "acclimatizationCompliant": { "type": "boolean" },
+        "permitsChecklist": { "type": "string", "maxLength": 500 },
+        "planMarkdown": { "type": "string", "minLength": 10, "maxLength": 8000 },
+        "offlinePackReady": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "ownerUid",
+        "title",
+        "provinceId",
+        "durationDays",
+        "budgetTier",
+        "maxElevationMeters",
+        "acclimatizationCompliant",
+        "permitsChecklist",
+        "planMarkdown",
+        "offlinePackReady",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "TravelerReview": {
+      "title": "ENT-035 Verified Traveler Review & Moderation Record",
+      "description": "Authenticated traveler review linked to a partner listing and moderated under U06/U09 governance.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "listingId": { "type": "string", "maxLength": 128 },
+        "authorUid": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "vcvCode": { "type": "string", "maxLength": 40 },
+        "rating": { "type": "number" },
+        "comment": { "type": "string", "minLength": 5, "maxLength": 1200 },
+        "moderationStatus": {
+          "type": "string",
+          "enum": ["Published", "Flagged", "Removed"]
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "listingId",
+        "authorUid",
+        "authorName",
+        "vcvCode",
+        "rating",
+        "comment",
+        "moderationStatus",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "SupportCase": {
+      "title": "ENT-036 Support Case & Emergency Escalation Ticket",
+      "description": "Traveler or partner support ticket and emergency assistance escalation log managed by U08 Support Staff.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "reporterUid": { "type": "string", "maxLength": 128 },
+        "reporterName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "category": {
+          "type": "string",
+          "enum": ["EmergencyRouting", "InquiryDelay", "KycDispute", "SafetyConcern", "GeneralSupport"]
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["Critical", "High", "Normal"]
+        },
+        "provinceId": { "type": "string", "maxLength": 20 },
+        "districtName": { "type": "string", "maxLength": 80 },
+        "subject": { "type": "string", "minLength": 3, "maxLength": 160 },
+        "description": { "type": "string", "minLength": 5, "maxLength": 1500 },
+        "resolutionNotes": { "type": "string", "maxLength": 1000 },
+        "caseStatus": {
+          "type": "string",
+          "enum": ["Open", "InProgress", "Resolved", "Closed"]
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "reporterUid",
+        "reporterName",
+        "category",
+        "priority",
+        "provinceId",
+        "districtName",
+        "subject",
+        "description",
+        "resolutionNotes",
+        "caseStatus",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AuditLogRecord": {
+      "title": "ENT-038 Immutable Administrative Audit Log",
+      "description": "Append-only governance log recording KYC decisions, role updates, moderation actions, and commission transitions.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "actorUid": { "type": "string", "maxLength": 128 },
+        "actorEmail": { "type": "string", "maxLength": 160 },
+        "actorRole": { "type": "string", "maxLength": 20 },
+        "actionType": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "targetEntityType": { "type": "string", "minLength": 2, "maxLength": 60 },
+        "targetEntityId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "reason": { "type": "string", "minLength": 2, "maxLength": 600 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "actorUid",
+        "actorEmail",
+        "actorRole",
+        "actionType",
+        "targetEntityType",
+        "targetEntityId",
+        "reason",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserPublicProfile" },
+      "description": "Public profile & RBAC role assignment (ENT-001/ENT-002). Self-registration restricted to U02 (Traveler) or U03 (Partner); admin roles U05-U09 only assigned by Super Admin."
+    },
+    "/users/{userId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/UserPrivateInfo" },
+      "description": "Isolated PII contact details strictly private to userId or Admin."
+    },
+    "/partner_listings/{listingId}": {
+      "schema": { "$ref": "#/entities/PartnerListing" },
+      "description": "Partner profiles and service listings across Nepal's 7 provinces & 77 districts (ENT-016/ENT-019)."
+    },
+    "/partner_kyc/{kycId}": {
+      "schema": { "$ref": "#/entities/PartnerKycSubmission" },
+      "description": "Isolated partner KYC verification submissions & reviewer decision records (ENT-017/ENT-018)."
+    },
+    "/booking_inquiries/{inquiryId}": {
+      "schema": { "$ref": "#/entities/BookingInquiry" },
+      "description": "Inquiry-First booking records with separated inquiryStatus, arrangementStatus, paymentStatus, commissionStatus, and VCV code (ENT-023/ENT-025/ENT-029)."
+    },
+    "/traveler_itineraries/{itineraryId}": {
+      "schema": { "$ref": "#/entities/TravelerItinerary" },
+      "description": "Saved traveler trip plans and AI itineraries with altitude acclimatization validation (ENT-013/ENT-014)."
+    },
+    "/traveler_reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/TravelerReview" },
+      "description": "Verified traveler reviews linked to listings and VCV vouchers (ENT-035)."
+    },
+    "/support_cases/{caseId}": {
+      "schema": { "$ref": "#/entities/SupportCase" },
+      "description": "Support tickets and emergency routing escalation logs (ENT-036)."
+    },
+    "/audit_logs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLogRecord" },
+      "description": "Immutable append-only administrative and verification audit trail (ENT-038)."
+    }
+  }
+}
